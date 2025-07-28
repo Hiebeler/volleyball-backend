@@ -1,0 +1,42 @@
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Team {
+  id           Int    @id @default(autoincrement())
+  name         String @db.VarChar(100)
+  gamesAsTeam1 Game[] @relation("team1Relation")
+  gamesAsTeam2 Game[] @relation("team2Relation")
+  Table        Table? @relation(fields: [tableId], references: [id])
+  tableId      Int?
+}
+
+model Game {
+  id         Int        @id @default(autoincrement())
+  tableId    Int
+  team1Id    Int
+  team2Id    Int
+  team1Score Int?
+  team2Score Int?
+  position   Int
+  status     GameStatus @default(PLANNED)
+
+  team1 Team  @relation("team1Relation", fields: [team1Id], references: [id])
+  team2 Team  @relation("team2Relation", fields: [team2Id], references: [id])
+  Table Table @relation(fields: [tableId], references: [id])
+}
+
+model Table {
+  id   Int    @id @default(autoincrement())
+  name String @db.VarChar(100)
+
+  teams Team[]
+  games Game[]
+}
+
+enum GameStatus {
+  PLANNED
+  ONGOING
+  FINISHED
+}

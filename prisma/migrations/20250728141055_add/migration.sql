@@ -1,0 +1,36 @@
+-- AlterTable
+ALTER TABLE `Team` ADD COLUMN `tableId` INTEGER NULL;
+
+-- CreateTable
+CREATE TABLE `Game` (
+    `id` INTEGER NOT NULL AUTO_INCREMENT,
+    `tableId` INTEGER NOT NULL,
+    `team1Id` INTEGER NOT NULL,
+    `team2Id` INTEGER NOT NULL,
+    `team1Score` INTEGER NULL,
+    `team2Score` INTEGER NULL,
+    `position` INTEGER NOT NULL,
+    `status` ENUM('PLANNED', 'ONGOING', 'FINISHED') NOT NULL DEFAULT 'PLANNED',
+
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
+CREATE TABLE `Table` (
+    `id` INTEGER NOT NULL AUTO_INCREMENT,
+    `name` VARCHAR(100) NOT NULL,
+
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- AddForeignKey
+ALTER TABLE `Team` ADD CONSTRAINT `Team_tableId_fkey` FOREIGN KEY (`tableId`) REFERENCES `Table`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `Game` ADD CONSTRAINT `Game_team1Id_fkey` FOREIGN KEY (`team1Id`) REFERENCES `Team`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `Game` ADD CONSTRAINT `Game_team2Id_fkey` FOREIGN KEY (`team2Id`) REFERENCES `Team`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `Game` ADD CONSTRAINT `Game_tableId_fkey` FOREIGN KEY (`tableId`) REFERENCES `Table`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
