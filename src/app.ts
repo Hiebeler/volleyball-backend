@@ -1,14 +1,12 @@
 import express, { Request, Response } from 'express';
-
+import authRoute from './routes/auth.route';
+import { errorHandler } from './middlewares/errorHandler';
 const app = express();
 
 app.use(express.json());
 
-app.get('/test', (req: Request, res: Response) => {
-    console.log("halloo");
-    return res.status(200).json({"test": "test"});
-})
+app.use('/api/auth', authRoute);
 
-//app.use(errorHandler);
+app.use(errorHandler);
 
 export default app;
