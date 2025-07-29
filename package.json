@@ -4,7 +4,9 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "npx ts-node-dev src/server.ts"
+    "dev": "npx ts-node-dev src/server.ts",
+    "build": "npx tsc && npm run copy-templates",
+    "start": "node dist/app.js"
   },
   "keywords": [],
   "author": "",
