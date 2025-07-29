@@ -3,8 +3,8 @@ import { ApiError } from '../errors/apiError';
 import { resSend, ResStatus } from '../helper';
 
 export const errorHandler = (err: unknown, _req: Request, res: Response, _next: NextFunction) => {
-  console.log('error');
   if (err instanceof ApiError) {
+    console.log(err.message);
     resSend(res, null, ResStatus.ERROR, err.message, err.status);
   } else {
     console.error(err);
