@@ -18,17 +18,17 @@ model Team {
 
 model Game {
   id         Int        @id @default(autoincrement())
-  tableId    Int
+  tableId    Int?
   team1Id    Int
   team2Id    Int
-  team1Score Int?
-  team2Score Int?
+  team1Score Int        @default(0)
+  team2Score Int        @default(0)
   position   Int
   status     GameStatus @default(PLANNED)
 
-  team1 Team  @relation("team1Relation", fields: [team1Id], references: [id])
-  team2 Team  @relation("team2Relation", fields: [team2Id], references: [id])
-  Table Table @relation(fields: [tableId], references: [id])
+  team1 Team   @relation("team1Relation", fields: [team1Id], references: [id])
+  team2 Team   @relation("team2Relation", fields: [team2Id], references: [id])
+  Table Table? @relation(fields: [tableId], references: [id])
 }
 
 model Table {
