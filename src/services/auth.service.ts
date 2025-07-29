@@ -7,10 +7,13 @@ import { injectable } from 'tsyringe';
 export class AuthService {
   async login(password: string): Promise<string> {
     const adminPasswordHash = process.env.ADMIN_PASSWORD_HASH;
+    console.log(adminPasswordHash);
+    console.log(password);
     if (!adminPasswordHash) {
       throw new ApiError('an unexpected error occured', 500);
     }
     const valid = await bcrypt.compare(password, adminPasswordHash);
+    console.log(valid);
     if (!valid) {
       throw new ApiError('wrong password', 400);
     }
