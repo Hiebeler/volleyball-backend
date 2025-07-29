@@ -5,11 +5,11 @@ services:
     build:
       dockerfile: Dockerfile
     ports:
-      - "3001:3000"
+      - "3000:3000"
     env_file:
       - .env
     expose:
-      - 3001
+      - 3000
     networks:
       - proxy-network
       - backend-network
