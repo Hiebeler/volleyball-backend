@@ -28,7 +28,7 @@ model Game {
 
   team1 Team   @relation("team1Relation", fields: [team1Id], references: [id])
   team2 Team   @relation("team2Relation", fields: [team2Id], references: [id])
-  Table Table? @relation(fields: [tableId], references: [id])
+  table Table? @relation(fields: [tableId], references: [id])
 }
 
 model Table {
