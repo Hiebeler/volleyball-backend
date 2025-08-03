@@ -2,6 +2,7 @@ import { inject, injectable } from 'tsyringe';
 import { PrismaService } from './prisma.service';
 import { ApiError } from '../errors/apiError';
 import { GameDto } from '../dtos/game.dto';
+import type { GameStatus } from '@prisma/client';
 
 @injectable()
 export class GameService {
@@ -23,5 +24,18 @@ export class GameService {
     }
     const gamesDto = games.map((game) => new GameDto(game));
     return gamesDto;
+  }
+
+  async setStatus(status: GameStatus, id: number): Promise<GameDto> {
+    //Todo: checks
+    const game = await this.prisma.game.update({
+      where: {
+        id: id,
+      },
+      data: {
+        status: status,
+      },
+    });
+    return game;
   }
 }

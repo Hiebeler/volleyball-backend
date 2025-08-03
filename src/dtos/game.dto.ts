@@ -7,6 +7,7 @@ export class GameDto {
   team2?: TeamDto;
   table?: TableDto;
   position: number;
+  status: string;
 
   constructor(team: any) {
     this.id = team.id;
@@ -18,5 +19,6 @@ export class GameDto {
       this.table = new TableDto(team.table);
     }
     this.position = team.position;
+    this.status = team.status;
   }
 }

@@ -1,0 +1,21 @@
+meta {
+  name: set status
+  type: http
+  seq: 2
+}
+
+put {
+  url: {{baseUrl}}/api/games/1/status
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "status": "ONGOING"
+  }
+}
+
+settings {
+  encodeUrl: true
+}
