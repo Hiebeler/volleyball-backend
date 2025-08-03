@@ -9,6 +9,18 @@ router.get('/', (req: Request, res: Response, next: NextFunction) =>
   gameController.getAll(req, res, next),
 );
 
+router.get('/upcoming', (req: Request, res: Response, next: NextFunction) =>
+  gameController.getUpcoming(req, res, next),
+);
+
+router.get('/ongoing', (req: Request, res: Response, next: NextFunction) =>
+  gameController.getOngoing(req, res, next),
+);
+
+router.get('/finished', (req: Request, res: Response, next: NextFunction) =>
+  gameController.getFinished(req, res, next),
+);
+
 router.put('/:gameId/status', auth, (req: Request, res: Response, next: NextFunction) =>
   gameController.setStatus(req, res, next),
 );
