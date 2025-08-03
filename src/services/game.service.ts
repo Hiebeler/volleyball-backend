@@ -63,7 +63,7 @@ export class GameService {
         throw new ApiError('there is already a game ongoing', 400);
       }
     }
-
+    console.log(`set game with id ${id}, to status: ${status}`);
     const game = await this.prisma.game.update({
       where: {
         id: id,
@@ -72,6 +72,7 @@ export class GameService {
         status: status,
       },
     });
+    console.table(game);
     return game;
   }
 }
