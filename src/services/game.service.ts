@@ -48,7 +48,22 @@ export class GameService {
   }
 
   async setStatus(status: GameStatus, id: number): Promise<GameDto> {
-    //Todo: checks
+    //Todo: checks, either return error when there is already a game running, or automatically set the running one to finsihed?
+    const gameWithId = await this.prisma.game.findUnique({
+      where: {
+        id: id,
+      },
+    });
+    if (!gameWithId) {
+      throw new ApiError('game with id not found', 400);
+    }
+    if (status === 'ONGOING') {
+      const ongoingGames = await this.getGames('ONGOING');
+      if (ongoingGames.length > 0) {
+        throw new ApiError('there is already a game ongoing', 400);
+      }
+    }
+
     const game = await this.prisma.game.update({
       where: {
         id: id,
