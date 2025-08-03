@@ -4,10 +4,12 @@ import teamRoute from './routes/team.route';
 import tableRoute from './routes/table.route';
 import gameRoute from './routes/game.route';
 import { errorHandler } from './middlewares/errorHandler';
+import cors from 'cors';
 const app = express();
 import dotenv from 'dotenv';
 
 dotenv.config();
+app.use(cors());
 
 app.use(express.json());
 
