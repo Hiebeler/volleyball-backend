@@ -81,7 +81,7 @@ export class GameService {
     return gameDto;
   }
 
-  async addScore(gameId: number, teamId: number): Promise<GameDto> {
+  async updateScore(gameId: number, teamId: number, delta: number): Promise<GameDto> {
     const game = await this.prisma.game.findUnique({
       where: {
         id: gameId,
@@ -100,7 +100,7 @@ export class GameService {
           id: gameId,
         },
         data: {
-          team1Score: game.team1Score + 1,
+          team1Score: game.team1Score + delta,
         },
         include: {
           team1: true,
@@ -113,7 +113,7 @@ export class GameService {
           id: gameId,
         },
         data: {
-          team2Score: game.team2Score + 1,
+          team2Score: game.team2Score + delta,
         },
         include: {
           team1: true,

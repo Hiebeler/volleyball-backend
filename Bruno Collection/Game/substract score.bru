@@ -1,0 +1,21 @@
+meta {
+  name: substract score
+  type: http
+  seq: 7
+}
+
+post {
+  url: {{baseUrl}}/api/games/2/score/add
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "teamId": 3
+  }
+}
+
+settings {
+  encodeUrl: true
+}

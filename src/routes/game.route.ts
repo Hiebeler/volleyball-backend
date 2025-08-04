@@ -29,4 +29,8 @@ router.post('/:gameId/score/add', auth, (req: Request, res: Response, next: Next
   gameController.addScore(req, res, next),
 );
 
+router.post('/:gameId/score/substract', auth, (req: Request, res: Response, next: NextFunction) =>
+  gameController.substractScore(req, res, next),
+);
+
 export default router;

@@ -62,7 +62,22 @@ export class GameController {
         throw new ApiError('invalid data', 400);
       }
 
-      const game = await this.gameService.addScore(gameId, teamId);
+      const game = await this.gameService.updateScore(gameId, teamId, 1);
+      resSend(res, game);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async substractScore(req: Request, res: Response, next: NextFunction) {
+    const gameId = Number(req.params.gameId);
+    const teamId = req.body.teamId;
+    try {
+      if (!gameId || !teamId) {
+        throw new ApiError('invalid data', 400);
+      }
+
+      const game = await this.gameService.updateScore(gameId, teamId, -1);
       resSend(res, game);
     } catch (error) {
       next(error);
