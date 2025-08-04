@@ -13,7 +13,13 @@ export function startWebSocketServer(): void {
     const gameService = container.resolve(GameService);
 
     gameService.getGames(GameStatus.ONGOING).then((game) => {
-      ws.send(JSON.stringify({ game: game[0] }));
+      if (game) {
+        ws.send(JSON.stringify({ game: game[0] }));
+      } else {
+        gameService.getGames(GameStatus.FINISHED).then((games) => {
+          ws.send(JSON.stringify({ game: games[games.length - 1] }));
+        });
+      }
     });
 
     ws.on('close', () => {
