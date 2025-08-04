@@ -3,6 +3,7 @@ import { PrismaService } from './prisma.service';
 import { ApiError } from '../errors/apiError';
 import { GameDto } from '../dtos/game.dto';
 import { Game, GameStatus } from '@prisma/client';
+import { broadcast } from './webSocket.service';
 
 @injectable()
 export class GameService {
@@ -63,7 +64,6 @@ export class GameService {
         throw new ApiError('there is already a game ongoing', 400);
       }
     }
-    console.log(`set game with id ${id}, to status: ${status}`);
     const game = await this.prisma.game.update({
       where: {
         id: id,
@@ -71,9 +71,16 @@ export class GameService {
       data: {
         status: status,
       },
+      include: {
+        team1: true,
+        team2: true,
+      },
     });
-    console.table(game);
-    return game;
+    const gameDto = new GameDto(game);
+    if (gameDto.status === GameStatus.ONGOING) {
+      broadcast(gameDto);
+    }
+    return gameDto;
   }
 
   async addScore(gameId: number, teamId: number): Promise<GameDto> {
@@ -118,6 +125,8 @@ export class GameService {
     } else {
       throw new ApiError('invalid team id', 400);
     }
-    return new GameDto(updatedGame);
+    const gameDto = new GameDto(updatedGame);
+    broadcast(gameDto);
+    return gameDto;
   }
 }
