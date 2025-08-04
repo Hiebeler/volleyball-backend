@@ -77,9 +77,7 @@ export class GameService {
       },
     });
     const gameDto = new GameDto(game);
-    if (gameDto.status === GameStatus.ONGOING) {
-      broadcast(gameDto);
-    }
+    broadcast(gameDto);
     return gameDto;
   }
 
