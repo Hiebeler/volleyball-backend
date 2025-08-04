@@ -1,0 +1,21 @@
+meta {
+  name: add score
+  type: http
+  seq: 6
+}
+
+post {
+  url: {{baseUrl}}/api/games/2/score/add
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "teamId": 1
+  }
+}
+
+settings {
+  encodeUrl: true
+}

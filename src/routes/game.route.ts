@@ -25,4 +25,8 @@ router.put('/:gameId/status', auth, (req: Request, res: Response, next: NextFunc
   gameController.setStatus(req, res, next),
 );
 
+router.post('/:gameId/score/add', auth, (req: Request, res: Response, next: NextFunction) =>
+  gameController.addScore(req, res, next),
+);
+
 export default router;

@@ -2,7 +2,7 @@ import { inject, injectable } from 'tsyringe';
 import { PrismaService } from './prisma.service';
 import { ApiError } from '../errors/apiError';
 import { GameDto } from '../dtos/game.dto';
-import type { GameStatus } from '@prisma/client';
+import { Game, GameStatus } from '@prisma/client';
 
 @injectable()
 export class GameService {
@@ -74,5 +74,50 @@ export class GameService {
     });
     console.table(game);
     return game;
+  }
+
+  async addScore(gameId: number, teamId: number): Promise<GameDto> {
+    const game = await this.prisma.game.findUnique({
+      where: {
+        id: gameId,
+      },
+    });
+    if (!game) {
+      throw new ApiError('no game with this id found', 400);
+    }
+    if (game.status !== GameStatus.ONGOING) {
+      throw new ApiError('game is not currently ongoing', 400);
+    }
+    let updatedGame: Game;
+    if (game.team1Id === teamId) {
+      updatedGame = await this.prisma.game.update({
+        where: {
+          id: gameId,
+        },
+        data: {
+          team1Score: game.team1Score + 1,
+        },
+        include: {
+          team1: true,
+          team2: true,
+        },
+      });
+    } else if (game.team2Id === teamId) {
+      updatedGame = await this.prisma.game.update({
+        where: {
+          id: gameId,
+        },
+        data: {
+          team2Score: game.team1Score + 1,
+        },
+        include: {
+          team1: true,
+          team2: true,
+        },
+      });
+    } else {
+      throw new ApiError('invalid team id', 400);
+    }
+    return new GameDto(updatedGame);
   }
 }

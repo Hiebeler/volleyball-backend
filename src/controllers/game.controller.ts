@@ -2,6 +2,7 @@ import type { NextFunction, Request, Response } from 'express';
 import { inject, injectable } from 'tsyringe';
 import { resSend } from '../helper';
 import { GameService } from '../services/game.service';
+import { ApiError } from '../errors/apiError';
 
 @injectable()
 export class GameController {
@@ -47,6 +48,21 @@ export class GameController {
     const id = Number(req.params.gameId);
     try {
       const game = await this.gameService.setStatus(status, id);
+      resSend(res, game);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async addScore(req: Request, res: Response, next: NextFunction) {
+    const gameId = Number(req.params.gameId);
+    const teamId = req.body.teamId;
+    try {
+      if (!gameId || !teamId) {
+        throw new ApiError('invalid data', 400);
+      }
+
+      const game = await this.gameService.addScore(gameId, teamId);
       resSend(res, game);
     } catch (error) {
       next(error);
