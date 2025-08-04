@@ -108,7 +108,7 @@ export class GameService {
           id: gameId,
         },
         data: {
-          team2Score: game.team1Score + 1,
+          team2Score: game.team2Score + 1,
         },
         include: {
           team1: true,
