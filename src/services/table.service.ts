@@ -2,6 +2,8 @@ import { inject, injectable } from 'tsyringe';
 import { PrismaService } from './prisma.service';
 import { ApiError } from '../errors/apiError';
 import { TableDto } from '../dtos/table.dto';
+import { Team } from '@prisma/client';
+import { TeamDto } from '../dtos/team.dto';
 
 @injectable()
 export class TableService {
@@ -21,8 +23,14 @@ export class TableService {
     tables.forEach((table) => {
       let tableDto = new TableDto(table);
       tableDto = this.calculateTeamPoints(tableDto, table.games);
+      if (tableDto.teams) {
+        tableDto.teams = tableDto.teams.sort((obj1: TeamDto, obj2: TeamDto) =>
+          obj1.points! < obj2.points! ? 1 : -1,
+        );
+      }
       tablesDtos.push(tableDto);
     });
+
     return tablesDtos;
   }
 
