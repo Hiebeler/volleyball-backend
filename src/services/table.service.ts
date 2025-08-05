@@ -23,10 +23,27 @@ export class TableService {
     tables.forEach((table) => {
       let tableDto = new TableDto(table);
       tableDto = this.calculateTeamPoints(tableDto, table.games);
+
       if (tableDto.teams) {
-        tableDto.teams = tableDto.teams.sort((obj1: TeamDto, obj2: TeamDto) =>
-          obj1.points! < obj2.points! ? 1 : -1,
-        );
+        tableDto.teams = tableDto.teams.sort((obj1: TeamDto, obj2: TeamDto) => {
+          if (obj1.points! < obj2.points!) {
+            return 1;
+          } else if (obj1.points! > obj2.points!) {
+            return -1;
+          } else {
+            if (obj1.tableWins! < obj2.tableWins!) {
+              return 1;
+            } else if (obj1.tableWins! > obj2.tableWins!) {
+              return -1;
+            } else {
+              if (obj1.tablePointsDiffrence! < obj2.tablePointsDiffrence!) {
+                return 1;
+              } else {
+                return -1;
+              }
+            }
+          }
+        });
       }
       tablesDtos.push(tableDto);
     });
@@ -38,6 +55,9 @@ export class TableService {
     if (tableDto.teams) {
       tableDto.teams = tableDto.teams.map((team) => {
         let points = 0;
+        let wins = 0;
+        let losses = 0;
+        let pointsDiffrence = 0;
         const gamesOfTeam = games.filter(
           (game) =>
             (game.team1Id === team.id || game.team2Id === team.id) && game.status === 'FINISHED',
@@ -46,10 +66,19 @@ export class TableService {
           const thisTeamScore = game.team1Id === team.id ? game.team1Score : game.team2Score;
           const otherTeamScore = game.team1Id === team.id ? game.team2Score : game.team1Score;
 
-          if (thisTeamScore > otherTeamScore) points += 3;
-          else if (thisTeamScore === otherTeamScore) points += 1;
+          if (thisTeamScore > otherTeamScore) {
+            points += 3;
+            wins++;
+          } else if (thisTeamScore === otherTeamScore) points += 1;
+          else {
+            losses++;
+          }
+          pointsDiffrence += thisTeamScore - otherTeamScore;
         });
         team.points = points;
+        team.tableWins = wins;
+        team.tableLosses = losses;
+        team.tablePointsDiffrence = pointsDiffrence;
         return team;
       });
     }
